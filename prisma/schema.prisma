@@ -1,0 +1,243 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+/// Utilizador do sistema — cobre todos os perfis (estudante, docente, coordenação)
+model User {
+  id                                String           @id @default(cuid())
+  name                              String
+  email                             String           @unique
+  emailVerified                     DateTime?
+  password                          String?
+  image                             String?
+  role                              Role             @default(ESTUDANTE)
+  numero                            String?          @unique
+  departamento                      String?
+  especialidade                     String?
+  disponivel                        Boolean          @default(true)
+  ativo                             Boolean          @default(true)
+  createdAt                         DateTime         @default(now())
+  updatedAt                         DateTime         @updatedAt
+  accounts                          Account[]
+  bancasProfessor                   BancaProfessor[]
+  entradasDiario                    DiarioBordo[]
+  orientacoesComoCoOrientador       Orientacao[]     @relation("OrientacaoCoOrientador")
+  orientacoesComoOrientador         Orientacao[]     @relation("OrientacaoOrientador")
+  propostasComoEstudante            PropostaTFC[]    @relation("PropostaEstudante")
+  propostasComoOrientadorPretendido PropostaTFC[]    @relation("PropostaOrientadorPretendido")
+  sessions                          Session[]
+
+  @@map("users")
+}
+
+/// Proposta de Trabalho de Fim de Curso
+model PropostaTFC {
+  id                    String         @id @default(cuid())
+  titulo                String
+  resumo                String
+  descricao             String
+  objetivos             String
+  area                  String
+  status                StatusProposta @default(RASCUNHO)
+  observacoes           String?
+  justificativaRecusa   String?
+  ano                   Int            @default(dbgenerated("(EXTRACT(year FROM now()))::integer"))
+  createdAt             DateTime       @default(now())
+  updatedAt             DateTime       @updatedAt
+  estudanteId           String
+  orientadorPreferidoId String?
+  banca                 Banca?
+  diario                DiarioBordo[]
+  entregas              Entrega[]
+  orientacao            Orientacao?
+  estudante             User           @relation("PropostaEstudante", fields: [estudanteId], references: [id], onDelete: Cascade)
+  orientadorPretendido  User?          @relation("PropostaOrientadorPretendido", fields: [orientadorPreferidoId], references: [id])
+  reunioes              Reuniao[]
+
+  @@map("propostas_tfc")
+}
+
+/// Relação de orientação entre docente e estudante para uma proposta
+model Orientacao {
+  id             String      @id @default(cuid())
+  dataInicio     DateTime    @default(now())
+  dataFim        DateTime?
+  cargaHoraria   Int?
+  observacoes    String?
+  ativo          Boolean     @default(true)
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  propostaId     String      @unique
+  orientadorId   String
+  coOrientadorId String?
+  coOrientador   User?       @relation("OrientacaoCoOrientador", fields: [coOrientadorId], references: [id])
+  orientador     User        @relation("OrientacaoOrientador", fields: [orientadorId], references: [id])
+  proposta       PropostaTFC @relation(fields: [propostaId], references: [id], onDelete: Cascade)
+
+  @@map("orientacoes")
+}
+
+/// Entrega de documento/capítulo pelo estudante (RF06)
+model Entrega {
+  id                   String        @id @default(cuid())
+  titulo               String
+  descricao            String?
+  tipo                 TipoEntrega   @default(PRE_PROJETO)
+  status               StatusEntrega @default(PENDENTE)
+  urlFicheiro          String?
+  nomeArquivo          String?
+  tamanhoBytes         Int?
+  nota                 Float?
+  feedback             String?
+  comentarioOrientador String?
+  prazo                DateTime?
+  entregueEm           DateTime?
+  avaliadoEm           DateTime?
+  createdAt            DateTime      @default(now())
+  updatedAt            DateTime      @updatedAt
+  propostaId           String
+  proposta             PropostaTFC   @relation(fields: [propostaId], references: [id], onDelete: Cascade)
+
+  @@map("entregas")
+}
+
+/// Reunião de orientação registada
+model Reuniao {
+  id         String      @id @default(cuid())
+  titulo     String
+  descricao  String?
+  data       DateTime
+  duracao    Int?
+  local      String?
+  ata        String?
+  realizada  Boolean     @default(false)
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  propostaId String
+  proposta   PropostaTFC @relation(fields: [propostaId], references: [id], onDelete: Cascade)
+
+  @@map("reunioes")
+}
+
+/// Diário de Bordo — registo de progresso da orientação (RF08)
+model DiarioBordo {
+  id            String      @id @default(cuid())
+  data          DateTime    @default(now())
+  resumo        String
+  proximasMetas String
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  propostaId    String
+  autorId       String
+  autor         User        @relation(fields: [autorId], references: [id])
+  proposta      PropostaTFC @relation(fields: [propostaId], references: [id], onDelete: Cascade)
+
+  @@map("diario_bordo")
+}
+
+/// Banca de avaliação do TFC
+model Banca {
+  id          String           @id @default(cuid())
+  dataDefesa  DateTime
+  local       String?
+  nota        Float?
+  observacoes String?
+  publicada   Boolean          @default(false)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  propostaId  String           @unique
+  professores BancaProfessor[]
+  proposta    PropostaTFC      @relation(fields: [propostaId], references: [id], onDelete: Cascade)
+
+  @@map("bancas")
+}
+
+/// Relação N:M entre Banca e User (professores membros da banca)
+model BancaProfessor {
+  id            String   @id @default(cuid())
+  funcao        String
+  notaAtribuida Float?
+  observacoes   String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  bancaId       String
+  professorId   String
+  banca         Banca    @relation(fields: [bancaId], references: [id], onDelete: Cascade)
+  professor     User     @relation(fields: [professorId], references: [id])
+
+  @@unique([bancaId, professorId])
+  @@map("banca_professores")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+enum Role {
+  ESTUDANTE
+  DOCENTE
+  COORDENACAO
+}
+
+enum StatusProposta {
+  RASCUNHO
+  SUBMETIDA
+  EM_REVISAO
+  APROVADA
+  REJEITADA
+  CANCELADA
+}
+
+enum StatusEntrega {
+  PENDENTE
+  ENTREGUE
+  EM_AVALIACAO
+  APROVADA
+  REJEITADA
+  REENTREGA_SOLICITADA
+}
+
+/// Tipo de entrega de documento pelo estudante
+enum TipoEntrega {
+  PRE_PROJETO
+  PARCIAL
+  FINAL
+}

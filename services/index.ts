@@ -1,16 +1,10 @@
-import { auth } from "@/auth";
-import { redirect } from "next/navigation";
-
 // ─────────────────────────────────────────────────────────────────────────────
-// app/page.tsx — Página raiz: redireciona conforme estado da sessão
+// services/index.ts — Re-exports centralizados
 // ─────────────────────────────────────────────────────────────────────────────
 
-export default async function RootPage() {
-  const session = await auth();
+export { authService } from "./auth.service";
+export { propostaService } from "./proposta.service";
+export { entregaService } from "./entrega.service";
+export { docenteService } from "./docente.service";
+export { diarioService } from "./diario.service";
 
-  if (session?.user) {
-    redirect("/dashboard");
-  } else {
-    redirect("/login");
-  }
-}

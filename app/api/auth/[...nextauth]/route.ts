@@ -1,16 +1,8 @@
-import { auth } from "@/auth";
-import { redirect } from "next/navigation";
+import { handlers } from "@/auth";
 
 // ─────────────────────────────────────────────────────────────────────────────
-// app/page.tsx — Página raiz: redireciona conforme estado da sessão
+// Route Handler do Auth.js
+// Processa todas as rotas /api/auth/* (signIn, signOut, session, etc.)
 // ─────────────────────────────────────────────────────────────────────────────
 
-export default async function RootPage() {
-  const session = await auth();
-
-  if (session?.user) {
-    redirect("/dashboard");
-  } else {
-    redirect("/login");
-  }
-}
+export const { GET, POST } = handlers;

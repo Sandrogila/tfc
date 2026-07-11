@@ -1,16 +1,24 @@
-import { auth } from "@/auth";
-import { redirect } from "next/navigation";
+import { Role } from "@prisma/client";
 
 // ─────────────────────────────────────────────────────────────────────────────
-// app/page.tsx — Página raiz: redireciona conforme estado da sessão
+// types/auth.ts — Tipos relacionados à autenticação
 // ─────────────────────────────────────────────────────────────────────────────
 
-export default async function RootPage() {
-  const session = await auth();
-
-  if (session?.user) {
-    redirect("/dashboard");
-  } else {
-    redirect("/login");
-  }
+export interface SessionUser {
+  id: string;
+  name: string;
+  email: string;
+  role: Role;
+  numero?: string;
+  image?: string | null;
 }
+
+export interface AuthSession {
+  user: SessionUser;
+  expires: string;
+}
+
+export type AuthError = {
+  type: "credentials" | "session" | "permission";
+  message: string;
+};

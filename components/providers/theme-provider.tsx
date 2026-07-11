@@ -1,16 +1,20 @@
-import { auth } from "@/auth";
-import { redirect } from "next/navigation";
+"use client";
+
+import { ThemeProvider as NextThemesProvider } from "next-themes";
 
 // ─────────────────────────────────────────────────────────────────────────────
-// app/page.tsx — Página raiz: redireciona conforme estado da sessão
+// ThemeProvider — Dark/Light mode provider
 // ─────────────────────────────────────────────────────────────────────────────
 
-export default async function RootPage() {
-  const session = await auth();
-
-  if (session?.user) {
-    redirect("/dashboard");
-  } else {
-    redirect("/login");
-  }
+export function ThemeProvider({ children }: { children: React.ReactNode }) {
+  return (
+    <NextThemesProvider
+      attribute="class"
+      defaultTheme="dark"
+      enableSystem
+      disableTransitionOnChange
+    >
+      {children}
+    </NextThemesProvider>
+  );
 }

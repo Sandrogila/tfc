@@ -1,16 +1,10 @@
-import { auth } from "@/auth";
-import { redirect } from "next/navigation";
-
 // ─────────────────────────────────────────────────────────────────────────────
-// app/page.tsx — Página raiz: redireciona conforme estado da sessão
+// repositories/index.ts — Re-exports centralizados
 // ─────────────────────────────────────────────────────────────────────────────
 
-export default async function RootPage() {
-  const session = await auth();
+export { userRepository } from "./user.repository";
+export { propostaRepository } from "./proposta.repository";
+export { entregaRepository } from "./entrega.repository";
+export { docenteRepository } from "./docente.repository";
+export { diarioRepository } from "./diario.repository";
 
-  if (session?.user) {
-    redirect("/dashboard");
-  } else {
-    redirect("/login");
-  }
-}
