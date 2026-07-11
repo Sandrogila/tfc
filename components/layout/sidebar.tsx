@@ -197,7 +197,7 @@ export function Sidebar({ className, userRole }: SidebarProps) {
       {/* Rodapé da sidebar */}
       <div className="border-t border-border/40 p-4">
         <p className="text-center text-[10px] text-muted-foreground">
-          IMETRO © {new Date().getFullYear()} • Fase 2
+          IMETRO © {new Date().getFullYear()}
         </p>
       </div>
     </aside>

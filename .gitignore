@@ -1,6 +1,6 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# dependencies
+# ─── Dependências ────────────────────────────────────────────────────────────
 /node_modules
 /.pnp
 .pnp.*
@@ -10,32 +10,55 @@
 !.yarn/releases
 !.yarn/versions
 
-# testing
+# ─── Testes ──────────────────────────────────────────────────────────────────
 /coverage
 
-# next.js
+# ─── Next.js ─────────────────────────────────────────────────────────────────
 /.next/
 /out/
 
-# production
+# ─── Build de Produção ───────────────────────────────────────────────────────
 /build
 
-# misc
+# ─── Misc ────────────────────────────────────────────────────────────────────
 .DS_Store
 *.pem
+Thumbs.db
 
-# debug
+# ─── Logs ────────────────────────────────────────────────────────────────────
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
+*.log
 
-# env files (can opt-in for committing if needed)
-.env*
+# ─── Variáveis de Ambiente (NUNCA subir credenciais!) ────────────────────────
+.env
+.env.*
+!.env.example
 
-# vercel
+# ─── Vercel ──────────────────────────────────────────────────────────────────
 .vercel
 
-# typescript
+# ─── TypeScript ──────────────────────────────────────────────────────────────
 *.tsbuildinfo
 next-env.d.ts
+
+# ─── Prisma ──────────────────────────────────────────────────────────────────
+# Migrations geradas localmente (manter apenas se quiser versionar)
+# prisma/migrations/
+
+# ─── IDEs e Editores ─────────────────────────────────────────────────────────
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# ─── Sistema Operativo ───────────────────────────────────────────────────────
+desktop.ini
+ehthumbs.db

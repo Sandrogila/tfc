@@ -7,6 +7,7 @@ import {
   editarPropostaSchema,
   aceitarPropostaSchema,
   recusarPropostaSchema,
+  avaliarPropostaCoordenacaoSchema,
 } from "@/lib/validations/proposta";
 import { revalidatePath } from "next/cache";
 
@@ -17,7 +18,7 @@ export interface ActionResponse {
 }
 
 /**
- * Action para submeter uma proposta de TFC (RF03)
+ * Action para submeter ou salvar como rascunho uma proposta de TFC (RF03)
  */
 export async function submeterPropostaAction(
   _prevState: ActionResponse | null,
@@ -28,13 +29,16 @@ export async function submeterPropostaAction(
     return { sucesso: false, erro: "Apenas estudantes autenticados podem submeter propostas." };
   }
 
+  const statusRaw = formData.get("status") as string | null;
+
   const rawData = {
     titulo: formData.get("titulo") as string,
     resumo: formData.get("resumo") as string,
     descricao: formData.get("descricao") as string,
     objetivos: formData.get("objetivos") as string,
     area: formData.get("area") as string,
-    orientadorPreferidoId: formData.get("orientadorPreferidoId") as string || undefined,
+    orientadorPreferidoId: (formData.get("orientadorPreferidoId") as string) || undefined,
+    status: (statusRaw === "RASCUNHO" ? "RASCUNHO" : "SUBMETIDA") as "RASCUNHO" | "SUBMETIDA",
   };
 
   const validated = criarPropostaSchema.safeParse(rawData);
@@ -71,7 +75,7 @@ export async function editarPropostaAction(
     descricao: formData.get("descricao") as string,
     objetivos: formData.get("objetivos") as string,
     area: formData.get("area") as string,
-    orientadorPreferidoId: formData.get("orientadorPreferidoId") as string || undefined,
+    orientadorPreferidoId: (formData.get("orientadorPreferidoId") as string) || undefined,
   };
 
   const validated = editarPropostaSchema.safeParse(rawData);
@@ -85,6 +89,43 @@ export async function editarPropostaAction(
 
   if (res.sucesso) {
     revalidatePath(`/propostas/${id}`);
+    revalidatePath("/propostas");
+  }
+
+  return res;
+}
+
+/**
+ * Action para o estudante excluir uma proposta (RASCUNHO ou SUBMETIDA)
+ */
+export async function excluirPropostaAction(propostaId: string): Promise<ActionResponse> {
+  const session = await auth();
+  if (!session?.user || session.user.role !== "ESTUDANTE") {
+    return { sucesso: false, erro: "Acesso não autorizado." };
+  }
+
+  const res = await propostaService.excluirProposta(propostaId, session.user.id);
+
+  if (res.sucesso) {
+    revalidatePath("/propostas");
+  }
+
+  return res;
+}
+
+/**
+ * Action para o estudante submeter um rascunho existente para avaliação
+ */
+export async function publicarPropostaAction(propostaId: string): Promise<ActionResponse> {
+  const session = await auth();
+  if (!session?.user || session.user.role !== "ESTUDANTE") {
+    return { sucesso: false, erro: "Acesso não autorizado." };
+  }
+
+  const res = await propostaService.publicarProposta(propostaId, session.user.id);
+
+  if (res.sucesso) {
+    revalidatePath(`/propostas/${propostaId}`);
     revalidatePath("/propostas");
   }
 
@@ -150,6 +191,42 @@ export async function recusarPropostaAction(
   if (res.sucesso) {
     revalidatePath(`/orientacoes/${propostaId}`);
     revalidatePath("/orientacoes");
+  }
+
+  return res;
+}
+
+/**
+ * Action para coordenação aprovar ou rejeitar uma proposta de TFC (RF04)
+ * Ao aprovar, cria/atualiza a orientação com o orientador indicado.
+ */
+export async function avaliarPropostaCoordenacaoAction(
+  _prevState: ActionResponse | null,
+  formData: FormData,
+): Promise<ActionResponse> {
+  const session = await auth();
+  if (!session?.user || session.user.role !== "COORDENACAO") {
+    return { sucesso: false, erro: "Acesso não autorizado. Apenas a coordenação pode avaliar propostas." };
+  }
+
+  const rawData = {
+    propostaId: formData.get("propostaId") as string,
+    status: formData.get("status") as string,
+    observacoes: (formData.get("observacoes") as string) || undefined,
+    orientadorId: (formData.get("orientadorId") as string) || undefined,
+  };
+
+  const validated = avaliarPropostaCoordenacaoSchema.safeParse(rawData);
+  if (!validated.success) {
+    const errorMsg = validated.error.issues[0]?.message ?? "Dados de avaliação inválidos.";
+    return { sucesso: false, erro: errorMsg };
+  }
+
+  const res = await propostaService.avaliarPropostaCoordenacao(validated.data);
+
+  if (res.sucesso) {
+    revalidatePath(`/gestao-propostas/${validated.data.propostaId}`);
+    revalidatePath("/gestao-propostas");
   }
 
   return res;

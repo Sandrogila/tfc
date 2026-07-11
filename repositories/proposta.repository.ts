@@ -98,14 +98,25 @@ export const propostaRepository = {
     area: string;
     estudanteId: string;
     orientadorPreferidoId?: string;
+    status?: StatusProposta;
   }) {
     return prisma.propostaTFC.create({
       data: {
         ...data,
-        status: "SUBMETIDA",
+        status: data.status || "SUBMETIDA",
       },
     });
   },
+
+  /**
+   * Exclui uma proposta por ID
+   */
+  async delete(id: string) {
+    return prisma.propostaTFC.delete({
+      where: { id },
+    });
+  },
+
 
   /**
    * Atualiza uma proposta existente
@@ -171,4 +182,15 @@ export const propostaRepository = {
       },
     });
   },
+
+  /**
+   * Atualiza o orientador de uma orientação existente
+   */
+  async updateOrientacaoOrientador(orientacaoId: string, novoOrientadorId: string) {
+    return prisma.orientacao.update({
+      where: { id: orientacaoId },
+      data: { orientadorId: novoOrientadorId },
+    });
+  },
 };
+

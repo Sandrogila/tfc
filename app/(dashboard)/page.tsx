@@ -11,9 +11,6 @@ import {
   AlertCircle,
 } from "lucide-react";
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Dashboard — Página inicial (placeholder estruturado para Fase 2)
-// ─────────────────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
   title: "Dashboard",

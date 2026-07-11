@@ -1,5 +1,5 @@
 import { propostaRepository } from "@/repositories/proposta.repository";
-
+import { StatusProposta } from "@prisma/client";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Serviço de Gestão de Propostas TFC — Regras de Negócio (RF03, RF04, RF05)
@@ -7,7 +7,7 @@ import { propostaRepository } from "@/repositories/proposta.repository";
 
 export const propostaService = {
   /**
-   * Submete uma proposta pelo estudante
+   * Submete ou cria rascunho de uma proposta pelo estudante
    */
   async submeterProposta(
     estudanteId: string,
@@ -18,6 +18,7 @@ export const propostaService = {
       objetivos: string;
       area: string;
       orientadorPreferidoId?: string;
+      status?: StatusProposta;
     },
   ) {
     // Valida se o estudante já tem propostas aprovadas ou submetidas
@@ -156,6 +157,130 @@ export const propostaService = {
       return { sucesso: true, dados: atualizada };
     } catch {
       return { sucesso: false, erro: "Erro ao rejeitar a proposta de TFC." };
+    }
+  },
+
+  /**
+   * Exclui uma proposta do estudante
+   */
+  async excluirProposta(id: string, estudanteId: string) {
+    const proposta = await propostaRepository.findById(id);
+
+    if (!proposta) {
+      return { sucesso: false, erro: "Proposta não encontrada." };
+    }
+
+    if (proposta.estudanteId !== estudanteId) {
+      return { sucesso: false, erro: "Não tem permissão para excluir esta proposta." };
+    }
+
+    if (proposta.status !== "RASCUNHO" && proposta.status !== "SUBMETIDA") {
+      return {
+        sucesso: false,
+        erro: `Não é possível excluir uma proposta no estado atual: ${proposta.status}.`,
+      };
+    }
+
+    try {
+      await propostaRepository.delete(id);
+      return { sucesso: true };
+    } catch {
+      return { sucesso: false, erro: "Erro ao excluir a proposta." };
+    }
+  },
+
+  /**
+   * Publica/submete uma proposta em rascunho
+   */
+  async publicarProposta(id: string, estudanteId: string) {
+    const proposta = await propostaRepository.findById(id);
+
+    if (!proposta) {
+      return { sucesso: false, erro: "Proposta não encontrada." };
+    }
+
+    if (proposta.estudanteId !== estudanteId) {
+      return { sucesso: false, erro: "Não tem permissão para publicar esta proposta." };
+    }
+
+    if (proposta.status !== "RASCUNHO") {
+      return {
+        sucesso: false,
+        erro: "Apenas propostas em estado de rascunho podem ser submetidas.",
+      };
+    }
+
+    try {
+      const atualizada = await propostaRepository.updateStatus(id, "SUBMETIDA");
+      return { sucesso: true, dados: atualizada };
+    } catch {
+      return { sucesso: false, erro: "Erro ao submeter a proposta." };
+    }
+  },
+
+  /**
+   * Avaliação de proposta pela Coordenação (RF04)
+   * Aprovar: cria/atualiza Orientacao com o orientador indicado
+   * Rejeitar: registra justificativa e muda status para REJEITADA
+   */
+  async avaliarPropostaCoordenacao(params: {
+    propostaId: string;
+    status: "APROVADA" | "REJEITADA";
+    observacoes?: string;
+    orientadorId?: string;
+  }) {
+    const proposta = await propostaRepository.findById(params.propostaId);
+
+    if (!proposta) {
+      return { sucesso: false, erro: "Proposta não encontrada." };
+    }
+
+    if (proposta.status !== "SUBMETIDA" && proposta.status !== "EM_REVISAO") {
+      return {
+        sucesso: false,
+        erro: "Apenas propostas submetidas ou em revisão podem ser avaliadas.",
+      };
+    }
+
+    try {
+      if (params.status === "APROVADA") {
+        if (!params.orientadorId) {
+          return { sucesso: false, erro: "É necessário indicar um orientador para aprovar a proposta." };
+        }
+
+        // RF05 — Limite de 5 orientações ativas por docente
+        const totalOrientacoes = await propostaRepository.countOrientacoesAtivas(params.orientadorId);
+        if (totalOrientacoes >= 5) {
+          return {
+            sucesso: false,
+            erro: "O orientador selecionado já atingiu o limite máximo de 5 orientações ativas.",
+          };
+        }
+
+        // Atualiza status da proposta para APROVADA
+        await propostaRepository.updateStatus(params.propostaId, "APROVADA", {
+          observacoes: params.observacoes,
+        });
+
+        // Cria ou atualiza a Orientação
+        if (!proposta.orientacao) {
+          await propostaRepository.criarOrientacao(params.propostaId, params.orientadorId);
+        } else {
+          // Se já existe orientação, atualiza o orientador (caso coordenação altere a indicação)
+          await propostaRepository.updateOrientacaoOrientador(proposta.orientacao.id, params.orientadorId);
+        }
+      } else {
+        // REJEITADA
+        await propostaRepository.updateStatus(params.propostaId, "REJEITADA", {
+          observacoes: params.observacoes,
+          justificativaRecusa: params.observacoes,
+        });
+      }
+
+      return { sucesso: true };
+    } catch (err) {
+      console.error("Erro ao avaliar proposta (coordenação):", err);
+      return { sucesso: false, erro: "Erro ao salvar a avaliação da proposta." };
     }
   },
 };

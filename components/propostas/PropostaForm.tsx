@@ -1,10 +1,11 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useState, useRef } from "react";
 import { submeterPropostaAction, editarPropostaAction } from "@/actions/proposta.actions";
-import { Loader2, ArrowLeft, Send } from "lucide-react";
+import { Loader2, ArrowLeft, Send, Save } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 
 interface PropostaFormProps {
   proposta?: {
@@ -24,6 +25,7 @@ export function PropostaForm({ proposta, docentes }: PropostaFormProps) {
   const actionToUse = isEditing ? editarPropostaAction : submeterPropostaAction;
 
   const [state, action, isPending] = useActionState(actionToUse, null);
+  const router = useRouter();
 
   const [titulo, setTitulo] = useState(proposta?.titulo ?? "");
   const [resumo, setResumo] = useState(proposta?.resumo ?? "");
@@ -31,10 +33,27 @@ export function PropostaForm({ proposta, docentes }: PropostaFormProps) {
   const [objetivos, setObjetivos] = useState(proposta?.objetivos ?? "");
   const [area, setArea] = useState(proposta?.area ?? "");
   const [orientadorId, setOrientadorId] = useState(proposta?.orientadorPreferidoId ?? "");
+  const [pendingStatus, setPendingStatus] = useState<"RASCUNHO" | "SUBMETIDA" | null>(null);
+
+  const statusRef = useRef<HTMLInputElement>(null);
+
+  // Redireciona após sucesso
+  if (state?.sucesso) {
+    setTimeout(() => router.push("/propostas"), 1500);
+  }
+
+  const handleSubmit = (status: "RASCUNHO" | "SUBMETIDA") => {
+    setPendingStatus(status);
+    if (statusRef.current) {
+      statusRef.current.value = status;
+    }
+  };
 
   return (
     <form action={action} className="space-y-6 max-w-3xl">
       {isEditing && <input type="hidden" name="id" value={proposta.id} />}
+      {/* Campo hidden para o status selecionado */}
+      <input type="hidden" name="status" ref={statusRef} defaultValue="SUBMETIDA" />
 
       {/* Alerta de erro */}
       {state && !state.sucesso && (
@@ -47,13 +66,9 @@ export function PropostaForm({ proposta, docentes }: PropostaFormProps) {
       {state && state.sucesso && (
         <div className="rounded-lg bg-emerald-500/10 p-4 border border-emerald-500/20">
           <p className="text-sm text-emerald-400 font-medium">
-            Proposta {isEditing ? "atualizada" : "submetida"} com sucesso! Redirecionando...
+            Proposta {pendingStatus === "RASCUNHO" ? "guardada como rascunho" : isEditing ? "atualizada" : "submetida"}{" "}
+            com sucesso! Redirecionando...
           </p>
-          <script
-            dangerouslySetInnerHTML={{
-              __html: `setTimeout(() => { window.location.href = '/propostas'; }, 1500)`,
-            }}
-          />
         </div>
       )}
 
@@ -102,7 +117,10 @@ export function PropostaForm({ proposta, docentes }: PropostaFormProps) {
 
         {/* Orientador Pretendido (RF03) */}
         <div className="space-y-1.5">
-          <label htmlFor="orientadorPreferidoId" className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+          <label
+            htmlFor="orientadorPreferidoId"
+            className="text-xs font-semibold text-muted-foreground uppercase tracking-wider"
+          >
             Orientador Pretendido (Opcional)
           </label>
           <select
@@ -195,7 +213,7 @@ export function PropostaForm({ proposta, docentes }: PropostaFormProps) {
         </div>
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex flex-wrap items-center gap-3">
         <Link
           href="/propostas"
           className="inline-flex items-center gap-2 rounded-lg border border-border bg-background px-4 py-2.5 text-sm font-semibold text-foreground hover:bg-secondary/50 transition-colors"
@@ -204,12 +222,36 @@ export function PropostaForm({ proposta, docentes }: PropostaFormProps) {
           Voltar
         </Link>
 
+        {/* Botão Salvar como Rascunho — só aparece ao criar nova proposta */}
+        {!isEditing && (
+          <button
+            type="submit"
+            disabled={isPending}
+            onClick={() => handleSubmit("RASCUNHO")}
+            className="inline-flex items-center gap-2 rounded-lg border border-border bg-background px-5 py-2.5 text-sm font-semibold text-foreground hover:bg-secondary/50 transition-all disabled:opacity-50 disabled:pointer-events-none"
+          >
+            {isPending && pendingStatus === "RASCUNHO" ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Guardando...
+              </>
+            ) : (
+              <>
+                <Save className="h-4 w-4" />
+                Guardar Rascunho
+              </>
+            )}
+          </button>
+        )}
+
+        {/* Botão Submeter */}
         <button
           type="submit"
           disabled={isPending}
+          onClick={() => handleSubmit("SUBMETIDA")}
           className="inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:bg-primary/95 transition-all shadow-md shadow-primary/10 ml-auto disabled:opacity-50 disabled:pointer-events-none"
         >
-          {isPending ? (
+          {isPending && pendingStatus !== "RASCUNHO" ? (
             <>
               <Loader2 className="h-4 w-4 animate-spin" />
               Processando...

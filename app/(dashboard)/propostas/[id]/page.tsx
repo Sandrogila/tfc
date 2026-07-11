@@ -1,6 +1,7 @@
 import { auth } from "@/auth";
 import { propostaRepository } from "@/repositories/proposta.repository";
 import { PropostaStatusBadge } from "@/components/propostas/PropostaStatusBadge";
+import { PropostaAcoesEstudante } from "@/components/propostas/PropostaAcoesEstudante";
 import Link from "next/link";
 import {
   ArrowLeft,
@@ -56,18 +57,23 @@ export default async function PropostaDetalhePage({ params }: { params: Promise<
           Voltar para Lista
         </Link>
 
-        {session.user.role === "ESTUDANTE" &&
-          eEstudanteProprietario &&
-          (proposta.status === "RASCUNHO" || proposta.status === "SUBMETIDA") && (
-            <Link
-              href={`/propostas/${proposta.id}/editar`}
-              className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground hover:bg-primary/95 transition-all shadow-md shadow-primary/10"
-            >
-              <Edit className="h-3.5 w-3.5" />
-              Editar Proposta
-            </Link>
-          )}
+        {/* Botões de ação do estudante proprietário */}
+        {session.user.role === "ESTUDANTE" && eEstudanteProprietario && (
+          <div className="flex flex-wrap items-center gap-3">
+            {(proposta.status === "RASCUNHO" || proposta.status === "SUBMETIDA") && (
+              <Link
+                href={`/propostas/${proposta.id}/editar`}
+                className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground hover:bg-primary/95 transition-all shadow-md shadow-primary/10"
+              >
+                <Edit className="h-3.5 w-3.5" />
+                Editar Proposta
+              </Link>
+            )}
+            <PropostaAcoesEstudante propostaId={proposta.id} status={proposta.status} />
+          </div>
+        )}
       </div>
+
 
       {/* Cabeçalho */}
       <div className="glass rounded-xl p-6 border border-border/40 space-y-4">
