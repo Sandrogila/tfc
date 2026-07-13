@@ -2,14 +2,12 @@ import { entregaRepository } from "@/repositories/entrega.repository";
 import { TipoEntrega, StatusEntrega } from "@prisma/client";
 
 
-// ─────────────────────────────────────────────────────────────────────────────
 // Serviço de Entregas — Regras de Negócio (RF06, RF07)
-// ─────────────────────────────────────────────────────────────────────────────
 
 export const entregaService = {
-  /**
-   * Submete um arquivo PDF de entrega do estudante (RF06)
-   */
+
+  // Submete um arquivo PDF de entrega do estudante (RF06)
+
   async submitEntrega(data: {
     titulo: string;
     descricao?: string;
@@ -27,9 +25,9 @@ export const entregaService = {
     }
   },
 
-  /**
-   * Regista a nota e comentário/feedback do orientador (RF07)
-   */
+
+  // Regista a nota e comentário/feedback do orientador (RF07)
+
   async avaliarEntrega(
     id: string,
     orientadorId: string,

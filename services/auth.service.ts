@@ -3,14 +3,12 @@ import { compare } from "bcryptjs";
 import { Role } from "@prisma/client";
 
 
-// ─────────────────────────────────────────────────────────────────────────────
 // services/auth.service.ts — Lógica de negócio da autenticação
-// ─────────────────────────────────────────────────────────────────────────────
 
 export const authService = {
-  /**
-   * Verificar credenciais para login
-   */
+
+  // Verificar credenciais para login
+
   async verificarCredenciais(email: string, password: string) {
     const user = await userRepository.findByEmail(email);
     if (!user || !user.password) {
@@ -26,9 +24,9 @@ export const authService = {
     return { sucesso: true, user };
   },
 
-  /**
-   * Registar novo utilizador
-   */
+
+  // Registar novo utilizador
+
   async registar(dados: {
     name: string;
     email: string;
@@ -58,9 +56,9 @@ export const authService = {
     return { sucesso: true, user };
   },
 
-  /**
-   * Alterar senha do utilizador
-   */
+
+  // * Alterar senha do utilizador
+
   async alterarSenha(
     userId: string,
     senhaAtual: string,

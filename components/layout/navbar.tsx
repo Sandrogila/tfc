@@ -14,9 +14,6 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Navbar — Barra de navegação superior
-// ─────────────────────────────────────────────────────────────────────────────
 
 const roleLabels: Record<string, string> = {
   ESTUDANTE: "Estudante",

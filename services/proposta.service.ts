@@ -1,14 +1,10 @@
 import { propostaRepository } from "@/repositories/proposta.repository";
 import { StatusProposta } from "@prisma/client";
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Serviço de Gestão de Propostas TFC — Regras de Negócio (RF03, RF04, RF05)
-// ─────────────────────────────────────────────────────────────────────────────
-
 export const propostaService = {
-  /**
-   * Submete ou cria rascunho de uma proposta pelo estudante
-   */
+
+  // Submete ou cria rascunho de uma proposta pelo estudante
+
   async submeterProposta(
     estudanteId: string,
     data: {
@@ -45,9 +41,9 @@ export const propostaService = {
     }
   },
 
-  /**
-   * Edita uma proposta caso ainda esteja pendente (status RASCUNHO ou SUBMETIDA) (RF03)
-   */
+
+  // Edita uma proposta caso ainda esteja pendente (status RASCUNHO ou SUBMETIDA) (RF03)
+
   async editarProposta(
     id: string,
     estudanteId: string,
@@ -92,9 +88,9 @@ export const propostaService = {
     }
   },
 
-  /**
-   * Aceita uma proposta de TFC (RF04, RF05)
-   */
+
+  // Aceita uma proposta de TFC (RF04, RF05)
+
   async aceitarProposta(propostaId: string, orientadorId: string) {
     const proposta = await propostaRepository.findById(propostaId);
 
@@ -131,9 +127,9 @@ export const propostaService = {
     }
   },
 
-  /**
-   * Recusa uma proposta com justificativa obrigatória (RF04)
-   */
+
+  // Recusa uma proposta com justificativa obrigatória (RF04)
+
   async recusarProposta(propostaId: string, orientadorId: string, justificativaRecusa: string) {
     const proposta = await propostaRepository.findById(propostaId);
 
@@ -160,9 +156,9 @@ export const propostaService = {
     }
   },
 
-  /**
-   * Exclui uma proposta do estudante
-   */
+
+  // Exclui uma proposta do estudante
+
   async excluirProposta(id: string, estudanteId: string) {
     const proposta = await propostaRepository.findById(id);
 
@@ -189,9 +185,9 @@ export const propostaService = {
     }
   },
 
-  /**
-   * Publica/submete uma proposta em rascunho
-   */
+
+  // Publica/submete uma proposta em rascunho
+
   async publicarProposta(id: string, estudanteId: string) {
     const proposta = await propostaRepository.findById(id);
 
@@ -218,11 +214,6 @@ export const propostaService = {
     }
   },
 
-  /**
-   * Avaliação de proposta pela Coordenação (RF04)
-   * Aprovar: cria/atualiza Orientacao com o orientador indicado
-   * Rejeitar: registra justificativa e muda status para REJEITADA
-   */
   async avaliarPropostaCoordenacao(params: {
     propostaId: string;
     status: "APROVADA" | "REJEITADA";

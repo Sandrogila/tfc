@@ -3,9 +3,6 @@
 import { useSession } from "./use-session";
 import type { Role } from "@prisma/client";
 
-// ─────────────────────────────────────────────────────────────────────────────
-// hooks/use-permissions.ts — Hook de permissões (client-side)
-// ─────────────────────────────────────────────────────────────────────────────
 
 export function usePermissions() {
   const { role, isAuthenticated, isLoading } = useSession();

@@ -2,9 +2,6 @@
 
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 
-// ─────────────────────────────────────────────────────────────────────────────
-// ThemeProvider — Dark/Light mode provider
-// ─────────────────────────────────────────────────────────────────────────────
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   return (

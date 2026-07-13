@@ -3,10 +3,6 @@
 import { useSession as useNextAuthSession } from "next-auth/react";
 import type { Role } from "@prisma/client";
 
-// ─────────────────────────────────────────────────────────────────────────────
-// hooks/use-session.ts — Hook de sessão com tipos corretos
-// ─────────────────────────────────────────────────────────────────────────────
-
 export function useSession() {
   const { data: session, status, update } = useNextAuthSession();
 

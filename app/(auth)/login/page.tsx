@@ -8,9 +8,6 @@ import { GraduationCap, Loader2, Eye, EyeOff, Lock, Mail } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Página de Login
-// ─────────────────────────────────────────────────────────────────────────────
 
 export default function LoginPage() {
   const router = useRouter();

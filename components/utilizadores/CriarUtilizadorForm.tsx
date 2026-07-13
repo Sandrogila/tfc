@@ -4,10 +4,6 @@ import { useActionState } from "react";
 import { registerAction } from "@/actions/auth.actions";
 import { PlusCircle, CheckCircle2, AlertCircle, Loader2 } from "lucide-react";
 
-// ─────────────────────────────────────────────────────────────────────────────
-// CriarUtilizadorForm — Formulário cliente para criar utilizadores
-// Mostra feedback de erro/sucesso sem redirecionar o utilizador
-// ─────────────────────────────────────────────────────────────────────────────
 
 const initialState = { sucesso: false, erro: undefined };
 

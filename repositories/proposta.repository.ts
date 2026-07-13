@@ -1,14 +1,11 @@
 import { prisma } from "@/lib/prisma";
 import { StatusProposta } from "@prisma/client";
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Repositório de Propostas TFC — Data Access Layer
-// ─────────────────────────────────────────────────────────────────────────────
 
 export const propostaRepository = {
-  /**
-   * Busca uma proposta pelo ID com todas as relações necessárias
-   */
+
+  // Busca uma proposta pelo ID com todas as relações necessárias
+
   async findById(id: string) {
     return prisma.propostaTFC.findUnique({
       where: { id },
@@ -27,9 +24,7 @@ export const propostaRepository = {
     });
   },
 
-  /**
-   * Lista todas as propostas do estudante autenticado
-   */
+  // Lista todas as propostas do estudante autenticado   
   async findByEstudante(estudanteId: string) {
     return prisma.propostaTFC.findMany({
       where: { estudanteId },
@@ -45,9 +40,8 @@ export const propostaRepository = {
     });
   },
 
-  /**
-   * Lista todas as propostas (para Coordenação)
-   */
+  // Lista todas as propostas (para Coordenação)
+
   async findAll(filtros?: { status?: StatusProposta; ano?: number }) {
     return prisma.propostaTFC.findMany({
       where: {
@@ -67,9 +61,9 @@ export const propostaRepository = {
     });
   },
 
-  /**
-   * Lista propostas pendentes/submetidas ao orientador (para Docente ver e aceitar/recusar)
-   */
+
+  // Lista propostas pendentes/submetidas ao orientador (para Docente ver e aceitar/recusar)
+
   async findPropostasParaOrientador(orientadorId: string) {
     return prisma.propostaTFC.findMany({
       where: {
@@ -87,9 +81,9 @@ export const propostaRepository = {
     });
   },
 
-  /**
-   * Cria uma nova proposta
-   */
+
+  // Cria uma nova proposta
+
   async create(data: {
     titulo: string;
     resumo: string;
@@ -108,9 +102,9 @@ export const propostaRepository = {
     });
   },
 
-  /**
-   * Exclui uma proposta por ID
-   */
+
+  // Exclui uma proposta por ID
+
   async delete(id: string) {
     return prisma.propostaTFC.delete({
       where: { id },
@@ -118,9 +112,9 @@ export const propostaRepository = {
   },
 
 
-  /**
-   * Atualiza uma proposta existente
-   */
+
+  // Atualiza uma proposta existente
+
   async update(
     id: string,
     data: Partial<{
@@ -138,9 +132,9 @@ export const propostaRepository = {
     });
   },
 
-  /**
-   * Atualiza apenas o status e campos relacionados
-   */
+
+  // Atualiza apenas o status e campos relacionados
+
   async updateStatus(
     id: string,
     status: StatusProposta,
@@ -158,9 +152,8 @@ export const propostaRepository = {
     });
   },
 
-  /**
-   * Conta orientações ativas de um docente (RF05 — limite de 5)
-   */
+
+  // Conta orientações ativas de um docente (RF05 — limite de 5) 
   async countOrientacoesAtivas(orientadorId: string): Promise<number> {
     return prisma.orientacao.count({
       where: {
@@ -170,9 +163,8 @@ export const propostaRepository = {
     });
   },
 
-  /**
-   * Cria a orientação após aceitação da proposta
-   */
+  // Cria a orientação após aceitação da proposta
+
   async criarOrientacao(propostaId: string, orientadorId: string) {
     return prisma.orientacao.create({
       data: {
@@ -183,9 +175,9 @@ export const propostaRepository = {
     });
   },
 
-  /**
-   * Atualiza o orientador de uma orientação existente
-   */
+
+  // Atualiza o orientador de uma orientação existente
+
   async updateOrientacaoOrientador(orientacaoId: string, novoOrientadorId: string) {
     return prisma.orientacao.update({
       where: { id: orientacaoId },

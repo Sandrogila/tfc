@@ -19,9 +19,6 @@ import {
   Loader2,
 } from "lucide-react";
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Sidebar — Navegação lateral principal (Fase 2 — Módulos reais implementados)
-// ─────────────────────────────────────────────────────────────────────────────
 
 import { Role } from "@prisma/client";
 

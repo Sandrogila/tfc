@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
 import { GraduationCap } from "lucide-react";
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Layout do grupo de rotas de autenticação
-// ─────────────────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
   title: "Autenticação",
@@ -82,7 +79,7 @@ export default function AuthLayout({
 
         {/* Footer */}
         <p className="relative text-xs text-slate-600">
-          © {new Date().getFullYear()} IMETRO — Instituto de Metrologia
+          © {new Date().getFullYear()} IMETRO — Instituto de Superior Politecnico Metropolitano de Angola
         </p>
       </div>
 

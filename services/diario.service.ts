@@ -1,14 +1,12 @@
 import { diarioRepository } from "@/repositories/diario.repository";
 import { propostaRepository } from "@/repositories/proposta.repository";
 
-// ─────────────────────────────────────────────────────────────────────────────
 // Serviço do Diário de Bordo — Regras de Negócio (RF08)
-// ─────────────────────────────────────────────────────────────────────────────
 
 export const diarioService = {
-  /**
-   * Cria um registo no Diário de Bordo
-   */
+
+  // Cria um registo no Diário de Bordo
+
   async criarEntrada(
     autorId: string,
     data: {

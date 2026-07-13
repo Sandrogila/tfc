@@ -1,13 +1,10 @@
 import { prisma } from "@/lib/prisma";
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Repositório de Diário de Bordo — Data Access Layer (RF08)
-// ─────────────────────────────────────────────────────────────────────────────
 
 export const diarioRepository = {
-  /**
-   * Procura uma entrada por ID
-   */
+
+  // Procura uma entrada por ID
+
   async findById(id: string) {
     return prisma.diarioBordo.findUnique({
       where: { id },
@@ -17,9 +14,9 @@ export const diarioRepository = {
     });
   },
 
-  /**
-   * Lista todas as entradas do Diário de Bordo de uma proposta específica
-   */
+
+  // Lista todas as entradas do Diário de Bordo de uma proposta específica
+
   async findByProposta(propostaId: string) {
     return prisma.diarioBordo.findMany({
       where: { propostaId },
@@ -30,9 +27,7 @@ export const diarioRepository = {
     });
   },
 
-  /**
-   * Cria uma entrada no diário
-   */
+  // Cria uma entrada no diário   
   async create(data: {
     data: Date;
     resumo: string;

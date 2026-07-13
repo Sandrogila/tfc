@@ -2,10 +2,6 @@ import { Sidebar } from "./sidebar";
 import { Navbar } from "./navbar";
 import { Role } from "@prisma/client";
 
-// ─────────────────────────────────────────────────────────────────────────────
-// MainLayout — Layout principal com Sidebar + Navbar + conteúdo
-// ─────────────────────────────────────────────────────────────────────────────
-
 interface MainLayoutProps {
   children: React.ReactNode;
   userRole?: Role;

@@ -1,13 +1,7 @@
 import { prisma } from "@/lib/prisma";
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Repositório de Docente — Data Access Layer (RF02)
-// ─────────────────────────────────────────────────────────────────────────────
 
 export const docenteRepository = {
-  /**
-   * Busca perfil de docente pelo ID do utilizador
-   */
   async findById(id: string) {
     return prisma.user.findFirst({
       where: { id, role: "DOCENTE" },
@@ -23,9 +17,9 @@ export const docenteRepository = {
     });
   },
 
-  /**
-   * Lista todos os docentes disponíveis para orientação
-   */
+
+  // Lista todos os docentes disponíveis para orientação
+
   async findDisponiveis() {
     return prisma.user.findMany({
       where: {
@@ -43,9 +37,9 @@ export const docenteRepository = {
     });
   },
 
-  /**
-   * Lista todos os docentes em geral
-   */
+
+  // Lista todos os docentes em geral
+
   async findAll() {
     return prisma.user.findMany({
       where: { role: "DOCENTE" },
@@ -66,9 +60,9 @@ export const docenteRepository = {
     });
   },
 
-  /**
-   * Atualiza a especialidade e disponibilidade de orientação do docente (RF02)
-   */
+
+  // Atualiza a especialidade e disponibilidade de orientação do docente (RF02)
+
   async updatePerfil(
     id: string,
     data: {
