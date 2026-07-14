@@ -2,9 +2,6 @@ import { prisma } from "@/lib/prisma";
 import { hash } from "bcryptjs";
 import { Role } from "@prisma/client";
 
-// ─────────────────────────────────────────────────────────────────────────────
-// repositories/user.repository.ts — Acesso a dados do User
-// ─────────────────────────────────────────────────────────────────────────────
 
 const SALT_ROUNDS = 12;
 
@@ -69,11 +66,15 @@ export const userRepository = {
     departamento?: string;
   }) {
     const hashedPassword = await hash(data.password, SALT_ROUNDS);
+    const { name, email, role, numero, departamento } = data;
     return prisma.user.create({
       data: {
-        ...data,
-        email: data.email.toLowerCase().trim(),
+        name,
+        email: email.toLowerCase().trim(),
         password: hashedPassword,
+        role,
+        numero,
+        departamento,
       },
     });
   },
