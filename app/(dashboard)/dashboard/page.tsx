@@ -227,7 +227,7 @@ export default async function DashboardPage() {
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div className="space-y-1">
           <h1 className="text-2xl font-bold text-foreground">
-            {saudacao}, {user?.name?.split(" ")[0]} 👋
+            {saudacao}, {user?.name?.split(" ")[0]}
           </h1>
           <p className="text-sm text-muted-foreground flex items-center gap-1.5">
             <Shield className="h-3.5 w-3.5 text-primary" />
