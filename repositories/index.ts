@@ -1,6 +1,4 @@
-// ─────────────────────────────────────────────────────────────────────────────
-// repositories/index.ts — Re-exports centralizados
-// ─────────────────────────────────────────────────────────────────────────────
+// repositories/index.ts — exports centralizados
 
 export { userRepository } from "./user.repository";
 export { propostaRepository } from "./proposta.repository";
