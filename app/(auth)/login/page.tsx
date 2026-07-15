@@ -135,9 +135,9 @@ export default function LoginPage() {
           disabled={isPending}
           id="login-submit-btn"
           className={cn(
-            "relative w-full rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground",
+            "relative w-full cursor-pointer rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground",
             "transition-all duration-200",
-            "hover:opacity-90 hover:shadow-lg hover:shadow-primary/25",
+            "hover:cursor-pointer hover:opacity-90 hover:shadow-lg hover:shadow-primary/25",
             "focus:outline-none focus:ring-2 focus:ring-primary/50",
             "disabled:cursor-not-allowed disabled:opacity-70",
           )}
@@ -176,16 +176,20 @@ export default function LoginPage() {
             key={demo.role}
             type="button"
             className={cn(
-              "rounded-lg border border-border/60 p-2 text-xs transition-colors",
-              "text-muted-foreground hover:border-primary/40 hover:bg-accent hover:text-foreground",
+              "cursor-pointer rounded-lg border border-border/60 p-2 text-xs text-muted-foreground",
+              "transition-all duration-200",
+              "hover:border-primary/40 hover:bg-accent hover:text-foreground",
+              "hover:shadow-lg hover:shadow-primary/25",
+              "focus:outline-none focus:ring-2 focus:ring-primary/50"
             )}
             onClick={() => {
               const emailInput = document.getElementById(
-                "email",
+                "email"
               ) as HTMLInputElement;
               const passwordInput = document.getElementById(
-                "password",
+                "password"
               ) as HTMLInputElement;
+
               if (emailInput) emailInput.value = demo.email;
               if (passwordInput) passwordInput.value = "Demo@1234";
             }}

@@ -15,9 +15,6 @@ import {
   Shield,
 } from "lucide-react";
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Dashboard — Página inicial com estatísticas reais da base de dados
-// ─────────────────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
   title: "Dashboard | TFC_IMETRO",
