@@ -82,7 +82,7 @@ export default async function DashboardPage() {
       {/* Cabeçalho de boas-vindas */}
       <div className="flex flex-col gap-1">
         <h1 className="text-2xl font-bold text-foreground">
-          {saudacao}, {user?.name?.split(" ")[0]} 👋
+          {saudacao}, {user?.name?.split(" ")[0]}
         </h1>
         <p className="text-sm text-muted-foreground">
           Bem-vindo ao TFC_IMETRO •{" "}
