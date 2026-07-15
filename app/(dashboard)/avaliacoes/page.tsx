@@ -15,10 +15,10 @@ export default async function DocenteAvaliacoesPage() {
 
   // Divide entre entregas pendentes de avaliação (ENTREGUE) e entregas já avaliadas
   const pendentes = entregas.filter(
-    (e) => e.status === "ENTREGUE" || e.status === "EM_AVALIACAO",
+    (e: any) => e.status === "ENTREGUE" || e.status === "EM_AVALIACAO",
   );
   const avaliadas = entregas.filter(
-    (e) => e.status === "APROVADA" || e.status === "REJEITADA" || e.status === "REENTREGA_SOLICITADA",
+    (e: any) => e.status === "APROVADA" || e.status === "REJEITADA" || e.status === "REENTREGA_SOLICITADA",
   );
 
   return (
