@@ -1,9 +1,6 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 
-// ─────────────────────────────────────────────────────────────────────────────
-// app/page.tsx — Página raiz: redireciona conforme estado da sessão
-// ─────────────────────────────────────────────────────────────────────────────
 
 export default async function RootPage() {
   const session = await auth();

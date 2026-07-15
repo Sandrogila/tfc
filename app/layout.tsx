@@ -6,9 +6,7 @@ import { QueryProvider } from "@/components/providers/query-provider";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { auth } from "@/auth";
 
-// ─────────────────────────────────────────────────────────────────────────────
 // Root Layout — TFC_IMETRO
-// ─────────────────────────────────────────────────────────────────────────────
 
 const inter = Inter({
   subsets: ["latin"],

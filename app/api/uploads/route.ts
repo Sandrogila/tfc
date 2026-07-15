@@ -3,10 +3,7 @@ import { auth } from "@/auth";
 import { writeFile, mkdir } from "fs/promises";
 import * as path from "path";
 
-// ─────────────────────────────────────────────────────────────────────────────
 // API Route para Upload de Documentos PDF (RF06)
-// Limita tamanho do arquivo em 10MB e valida tipo de arquivo PDF
-// ─────────────────────────────────────────────────────────────────────────────
 
 export async function POST(request: Request) {
   const session = await auth();
