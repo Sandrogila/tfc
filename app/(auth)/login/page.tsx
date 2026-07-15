@@ -93,13 +93,7 @@ export default function LoginPage() {
             >
               Senha
             </label>
-            <Link
-              href="/recuperar-senha"
-              className="text-xs text-primary hover:underline"
-              id="forgot-password-link"
-            >
-              Esqueceu a senha?
-            </Link>
+
           </div>
           <div className="relative">
             <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
