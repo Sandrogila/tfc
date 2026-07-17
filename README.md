@@ -1,8 +1,12 @@
 # 🎓 TFC Manager — Sistema de Gestão de Trabalhos de Fim de Curso
 
 O **TFC Manager** é uma plataforma web moderna e robusta para automatizar, organizar e monitorizar todo o ciclo de vida dos Trabalhos de Fim de Curso (TFC) na instituição de ensino (IMETRO). O sistema conecta estudantes, docentes e a coordenação científica num fluxo de trabalho estruturado e auditável.
-
+ 
 ---
+##Grupo
+**Sangamba Mussumba**
+**Katchilimbe Moutinho**
+**Felizardo**
 
 ## 🚀 Visão Geral e Funcionalidades do Sistema
 
