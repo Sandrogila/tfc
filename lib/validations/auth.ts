@@ -77,7 +77,31 @@ export const changePasswordSchema = z
     path: ["confirmarNovaSenha"],
   });
 
+export const atualizarPerfilSchema = z.object({
+  name: z
+    .string()
+    .min(1, { message: "O nome é obrigatório." })
+    .min(2, { message: "O nome deve ter pelo menos 2 caracteres." })
+    .trim(),
+  email: z
+    .string()
+    .min(1, { message: "O email é obrigatório." })
+    .email({ message: "Formato de email inválido." })
+    .trim()
+    .toLowerCase(),
+  numero: z
+    .string()
+    .min(1, { message: "O número é obrigatório." })
+    .min(3, { message: "Número inválido." })
+    .trim(),
+  departamento: z.string().optional(),
+  especialidade: z.string().optional(),
+  disponivel: z.boolean().optional(),
+});
+
 // Tipos inferidos
 export type LoginInput = z.infer<typeof loginSchema>;
 export type RegisterInput = z.infer<typeof registerSchema>;
 export type ChangePasswordInput = z.infer<typeof changePasswordSchema>;
+export type AtualizarPerfilInput = z.infer<typeof atualizarPerfilSchema>;
+

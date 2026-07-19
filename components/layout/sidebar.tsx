@@ -79,7 +79,7 @@ const navItems: NavItem[] = [
   },
   {
     label: "Perfil de Orientação",
-    href: "/perfil-docente",
+    href: "/perfil",
     icon: UserCog,
     roles: ["DOCENTE"],
   },

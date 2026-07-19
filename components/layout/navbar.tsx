@@ -3,6 +3,7 @@
 import { useSession } from "@/hooks/use-session";
 import { logoutAction } from "@/actions/auth.actions";
 import { useTheme } from "next-themes";
+import Link from "next/link";
 import {
   Bell,
   LogOut,
@@ -75,7 +76,8 @@ export function Navbar() {
         </button>
 
         {/* Notificações */}
-        <button
+        <Link
+          href="/notificacoes"
           className={cn(
             "relative flex h-9 w-9 items-center justify-center rounded-lg border border-border/60",
             "text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground",
@@ -86,7 +88,7 @@ export function Navbar() {
           <Bell className="h-4 w-4" />
           {/* Badge de notificação */}
           <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-destructive" />
-        </button>
+        </Link>
 
         {/* Separador */}
         <div className="mx-1 h-6 w-px bg-border/60" />
@@ -140,7 +142,7 @@ export function Navbar() {
             </div>
             <div className="my-1 h-px bg-border/60" />
             <a
-              href="/dashboard/perfil"
+              href="/perfil"
               className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-accent hover:text-accent-foreground"
               id="profile-link"
             >
