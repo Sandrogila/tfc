@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect, useRef } from "react";
 import { useSession } from "@/hooks/use-session";
 import { logoutAction } from "@/actions/auth.actions";
 import { useTheme } from "next-themes";
@@ -12,6 +13,7 @@ import {
   User,
   ChevronDown,
   GraduationCap,
+  Menu,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -31,9 +33,26 @@ const roleBadgeColors: Record<string, string> = {
     "bg-violet-500/10 text-violet-400 ring-1 ring-violet-500/20",
 };
 
-export function Navbar() {
+interface NavbarProps {
+  onMenuClick?: () => void;
+}
+
+export function Navbar({ onMenuClick }: NavbarProps) {
   const { user, nome } = useSession();
   const { theme, setTheme } = useTheme();
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  // Fecha o menu ao clicar fora
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setUserMenuOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const roleLabel = user?.role ? roleLabels[user.role] ?? user.role : "";
   const roleBadge = user?.role ? roleBadgeColors[user.role] ?? "" : "";
@@ -48,12 +67,24 @@ export function Navbar() {
 
   return (
     <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-border/40 bg-background/80 px-6 backdrop-blur-md">
-      {/* Lado esquerdo — breadcrumb placeholder */}
-      <div className="flex items-center gap-2">
-        <GraduationCap className="h-5 w-5 text-muted-foreground" />
-        <span className="text-sm font-medium text-muted-foreground">
-          TFC_IMETRO
-        </span>
+      {/* Lado esquerdo — hambúrguer para mobile e logo */}
+      <div className="flex items-center gap-3">
+        {onMenuClick && (
+          <button
+            onClick={onMenuClick}
+            className="flex h-9 w-9 items-center justify-center rounded-lg border border-border/60 text-muted-foreground hover:bg-accent hover:text-accent-foreground md:hidden"
+            aria-label="Abrir menu"
+            id="mobile-menu-toggle"
+          >
+            <Menu className="h-5 w-5" />
+          </button>
+        )}
+        <div className="flex items-center gap-2">
+          <GraduationCap className="h-5 w-5 text-muted-foreground" />
+          <span className="text-sm font-medium text-muted-foreground">
+            TFC_IMETRO
+          </span>
+        </div>
       </div>
 
       {/* Lado direito — ações */}
@@ -94,8 +125,9 @@ export function Navbar() {
         <div className="mx-1 h-6 w-px bg-border/60" />
 
         {/* Perfil do utilizador */}
-        <div className="group relative">
+        <div className="relative" ref={menuRef}>
           <button
+            onClick={() => setUserMenuOpen(!userMenuOpen)}
             className={cn(
               "flex items-center gap-2.5 rounded-lg border border-border/60 px-3 py-1.5",
               "text-sm transition-colors hover:bg-accent",
@@ -124,15 +156,15 @@ export function Navbar() {
               )}
             </div>
 
-            <ChevronDown className="h-3.5 w-3.5 text-muted-foreground transition-transform group-hover:rotate-180" />
+            <ChevronDown className={cn("h-3.5 w-3.5 text-muted-foreground transition-transform", userMenuOpen && "rotate-180")} />
           </button>
 
           {/* Dropdown menu */}
           <div
             className={cn(
-              "invisible absolute right-0 top-full z-50 mt-1 w-48 rounded-lg border border-border/60",
-              "bg-popover p-1 shadow-lg opacity-0 transition-all duration-200",
-              "group-hover:visible group-hover:opacity-100",
+              "absolute right-0 top-full z-50 mt-1 w-48 rounded-lg border border-border/60",
+              "bg-popover p-1 shadow-lg transition-all duration-200",
+              userMenuOpen ? "visible opacity-100" : "invisible opacity-0",
             )}
           >
             <div className="px-3 py-2">
@@ -141,16 +173,20 @@ export function Navbar() {
               </p>
             </div>
             <div className="my-1 h-px bg-border/60" />
-            <a
+            <Link
               href="/perfil"
+              onClick={() => setUserMenuOpen(false)}
               className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-accent hover:text-accent-foreground"
               id="profile-link"
             >
               <User className="h-4 w-4" />
               Meu Perfil
-            </a>
+            </Link>
             <button
-              onClick={() => logoutAction()}
+              onClick={() => {
+                setUserMenuOpen(false);
+                logoutAction();
+              }}
               className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-destructive hover:bg-destructive/10"
               id="logout-btn"
             >

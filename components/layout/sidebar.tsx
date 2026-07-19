@@ -17,6 +17,7 @@ import {
   UserCog,
   BarChart3,
   Loader2,
+  X,
 } from "lucide-react";
 
 
@@ -102,9 +103,10 @@ const navItems: NavItem[] = [
 interface SidebarProps {
   className?: string;
   userRole?: Role;
+  onClose?: () => void;
 }
 
-export function Sidebar({ className, userRole }: SidebarProps) {
+export function Sidebar({ className, userRole, onClose }: SidebarProps) {
   const pathname = usePathname();
   const { role: clientRole, isLoading: clientLoading } = usePermissions();
 
@@ -131,19 +133,32 @@ export function Sidebar({ className, userRole }: SidebarProps) {
         className,
       )}
     >
-      {/* Logo */}
-      <div className="flex h-16 items-center gap-3 border-b border-border/40 px-6">
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-          <GraduationCap className="h-4 w-4 text-primary-foreground" />
+      {/* Logo e Fechar */}
+      <div className="flex h-16 items-center justify-between border-b border-border/40 px-6">
+        <div className="flex items-center gap-3">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
+            <GraduationCap className="h-4 w-4 text-primary-foreground" />
+          </div>
+          <div className="flex flex-col">
+            <span className="text-sm font-semibold leading-none text-foreground">
+              TFC_IMETRO
+            </span>
+            <span className="mt-0.5 text-[10px] uppercase tracking-widest text-muted-foreground">
+              Gestão de TFC
+            </span>
+          </div>
         </div>
-        <div className="flex flex-col">
-          <span className="text-sm font-semibold leading-none text-foreground">
-            TFC_IMETRO
-          </span>
-          <span className="mt-0.5 text-[10px] uppercase tracking-widest text-muted-foreground">
-            Gestão de TFC
-          </span>
-        </div>
+
+        {/* Botão fechar (apenas em mobile/gaveta) */}
+        {onClose && (
+          <button
+            onClick={onClose}
+            className="rounded-lg p-1.5 text-muted-foreground hover:bg-accent hover:text-foreground md:hidden"
+            aria-label="Fechar menu"
+          >
+            <X className="h-5 w-5" />
+          </button>
+        )}
       </div>
 
       {/* Navegação */}
@@ -163,6 +178,7 @@ export function Sidebar({ className, userRole }: SidebarProps) {
               <Link
                 key={item.href + item.label}
                 href={item.href}
+                onClick={() => onClose?.()}
                 className={cn(
                   "group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200",
                   isActive
