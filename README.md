@@ -12,19 +12,19 @@ O **TFC Manager** é uma plataforma web moderna e robusta para automatizar, orga
 
 A plataforma implementa um controlo de acessos baseado em perfis (**RBAC**), oferecendo ecrãs e fluxos dedicados a cada ator do processo:
 
-### 1. 👨‍🎓 Portal do Estudante
+### 1.  Portal do Estudante
 * **Submissão de Propostas**: Criação de propostas de TFC com título, área científica, resumo, objetivos e metodologia.
 * **Modo Rascunho vs. Submissão**: Salvar o trabalho como rascunho para edição posterior ou submeter diretamente para a avaliação da coordenação/docente.
 * **Proposta de Orientador**: Possibilidade de indicar um docente de preferência para guiar o trabalho.
 * **Edição e Exclusão**: Gestão autónoma de propostas nos estados de Rascunho ou Submetida.
 * **Acompanhamento de Entregas & Diário de Bordo**: Submissão das etapas do TFC (pré-projeto, entregas parciais, versão final) e registo dos diários de bordo sobre os avanços.
 
-### 2. 👩‍🏫 Portal do Docente
+### 2. Portal do Docente
 * **Gestão de Convites de Orientação**: Visualização das propostas onde foi sugerido como orientador e opção de aceitar ou rejeitar a orientação (com justificativa obrigatória).
 * **Controlo de Carga de Trabalho**: O sistema impede que um docente ultrapasse o limite de **5 orientações ativas** em simultâneo (garantindo a qualidade de tutoria).
 * **Feedback de Entregas**: Revisão e avaliação dos documentos enviados pelos estudantes com comentários inline.
 
-### 3. 🏛️ Portal da Coordenação (Gestão de Propostas)
+### 3.  Portal da Coordenação (Gestão de Propostas)
 * **Painel de Avaliação Centralizado**: Acompanhamento de todas as propostas submetidas na instituição.
 * **Aprovação de Propostas**: Aprovação direta do tema de TFC com designação oficial do orientador (o coordenador pode confirmar a sugestão do estudante ou designar outro docente elegível).
 * **Rejeição com Justificativa**: Devolução de propostas que não cumpram os critérios metodológicos com fundamentação por escrito.
@@ -32,7 +32,7 @@ A plataforma implementa um controlo de acessos baseado em perfis (**RBAC**), ofe
 
 ---
 
-## 🛠️ Stack Tecnológica
+##  Stack Tecnológica
 
 * **Framework**: [Next.js 15 (App Router)](https://nextjs.org/)
 * **Linguagem**: [TypeScript](https://www.typescriptlang.org/)
@@ -44,33 +44,33 @@ A plataforma implementa um controlo de acessos baseado em perfis (**RBAC**), ofe
 
 ---
 
-## 🔌 Possíveis Integrações com Outros Sistemas
+##  Possíveis Integrações com Outros Sistemas
 
 O TFC Manager foi arquitetado de forma modular, permitindo a sua extensão para interagir com o ecossistema tecnológico universitário e serviços externos:
 
-### 1. 🏫 Integração com o Sistema Académico Central (ex: SAP / Portal do Aluno)
+### 1.  Integração com o Sistema Académico Central (ex: SAP / Portal do Aluno)
 * **Sincronização de Matrículas**: Importação automática de dados de estudantes aptos a realizar TFC (baseado em créditos concluídos ou disciplinas específicas).
 * **Lançamento de Notas**: Envio automático da nota final atribuída pela banca examinadora de TFC diretamente para a folha de notas oficial do aluno no sistema académico central.
 
-### 2. 📄 Integração com Repositórios Digitais Académicos (ex: DSpace / Repositório do IMETRO)
+### 2.  Integração com Repositórios Digitais Académicos (ex: DSpace / Repositório do IMETRO)
 * **Publicação Automática**: Após a aprovação da versão final do TFC pela banca e orientador, o PDF e os metadados (autor, resumo, área) são exportados de forma automática para o repositório institucional aberto.
 
-### 3. ✉️ Notificações e Mensajeria (ex: Resend / SendGrid / WhatsApp API)
+### 3.  Notificações e Mensajeria (ex: Resend / SendGrid / WhatsApp API)
 * **Alertas em Tempo Real**: Envio de notificações automáticas via E-mail ou WhatsApp quando:
   - Um estudante submete uma proposta (notifica o orientador pretendido).
   - A coordenação avalia ou altera o status da proposta (notifica o estudante).
   - Um prazo de entrega de capítulo está próximo (lembrete automático).
 
-### 4. 🔍 Deteção de Plágio e Inteligência Artificial (ex: Turnitin / CopySpider API)
+### 4.  Deteção de Plágio e Inteligência Artificial (ex: Turnitin / CopySpider API)
 * **Análise de Originalidade**: Integração com ferramentas de deteção de plágio para fazer o scan automático dos documentos (.pdf, .docx) enviados pelos estudantes na área de entregas.
 * **Assistente de Sumarização IA**: Uso de LLMs para gerar resumos executivos automáticos de TFCs concluídos ou analisar a aderência do tema à linha de pesquisa do departamento.
 
-### 5. 📂 Armazenamento de Arquivos em Nuvem (ex: AWS S3 / Azure Blob Storage)
+### 5.  Armazenamento de Arquivos em Nuvem (ex: AWS S3 / Azure Blob Storage)
 * **Escalabilidade de Arquivos**: Transferência do armazenamento dos documentos entregues pelos estudantes de armazenamento local/base de dados para buckets de alta disponibilidade (como Amazon S3 ou Supabase Storage), otimizando custos e largura de banda.
 
 ---
 
-## 📦 Como Instalar e Configurar o Projeto
+## Como Instalar e Configurar o Projeto
 
 ### Pré-requisitos
 * Node.js v18 ou superior instalado.
